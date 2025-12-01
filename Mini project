@@ -1,0 +1,334 @@
+#include <stdio.h>
+#include <string.h>
+#include<stdlib.h>
+
+#define MAX 100
+
+struct Student {
+    int roll;
+    char name[50];
+    float grade;
+};
+
+
+struct Student students[MAX];
+int count = 0;
+
+int readInt(){
+	
+     char temp[50];
+     while(1){
+     	scanf("%s",temp);
+     	int valid=1;
+     	for(int i=0;temp[i]!='\0';i++){
+     		if(temp[i]<'0'||temp[i]>'9'){
+     			valid=0;
+     			break;
+			 }
+		 }
+		 if(!valid){
+		 	printf("invalid only whole number(1,2,3,4,5)\n");
+		 	continue;
+		 }
+		 return atoi(temp);
+	}
+	 }
+
+void loadFromFile() {
+    FILE *fp = fopen("C:\\Users\\DHAMOTHIRAN\\Desktop\\Kavi programs\\studentslist.txt", "r");
+    if (fp == NULL) {
+        return;
+    }
+
+    count = 0;
+    while ( count<MAX&&
+	       fscanf(fp, "%d %s %f \n", 
+		   &students[count].roll,
+		   students[count].name,
+		   &students[count].grade)==3) {
+        count++;
+    }
+
+    fclose(fp);
+}
+
+void saveToFile() {
+    FILE *fp = fopen("C:\\Users\\DHAMOTHIRAN\\Desktop\\Kavi Programs\\studentslist.txt", "w");
+    for (int i = 0; i < count; i++) {
+        fprintf(fp, "%d %s %.2f \n",
+                students[i].roll,
+                students[i].name,
+                students[i].grade);
+    }
+    fclose(fp);
+}
+int isRollExists(int roll){
+ for(int i=0;i<count;i++){
+ 	if(students[i].roll==roll){
+ 		return 1;
+	 }
+}
+	 return 0;
+ }
+
+void addStudent() {
+    printf("\n--- Add Student ---\n");
+    while(1){	
+    printf("Enter Student  Roll Number: ");
+    students[count].roll=readInt();
+    
+    if(isRollExists(students[count].roll)){
+    	printf("Roll number already  exists!");
+    	continue;
+	}
+	break;
+}
+    
+  
+while(1){
+   	int valid=1;
+    printf("Enter student  Name: ");
+    scanf("%s", students[count].name);
+    for(int i=0;students[count].name[i]!='\0';i++){
+    	if(!((students[count].name[i]>='A'&&
+		students[count].name[i]<='Z')||
+		(students[count].name[i]>='a'&&students[count].name[i]<='z'))){
+		
+	    valid=0;
+	    break;
+	}
+}
+
+    if(!valid){
+	printf("Invalid name!Only alphabets are allowded Ex:ramya\n");
+	continue;
+}
+    break;
+}
+
+char tempGrade[50];
+while(1){
+   int valid=1;
+   int gcount=0;
+   	    
+
+    printf("Enter student Grade: ");
+    scanf("%s",tempGrade);
+    for(int i=0;tempGrade[i]!='\0';i++){
+    	if(tempGrade[i]=='.'){
+    		gcount++;
+    		if(gcount>1){
+    			valid=0;
+    			break;
+			}
+		}
+			else if(tempGrade[i]<'0'||tempGrade[i]>'9'){
+				valid=0;
+				break;
+			}
+		}
+		if(!valid){
+			printf("invalid grade enter decimal number Ex:56.55");
+			continue;
+		}
+		students[count].grade=atof(tempGrade);
+		break;
+	}
+    
+    
+    		
+		
+
+    count++;
+    saveToFile();
+
+    printf("Student Added Successfully!\n");
+}
+
+void viewStudents() {
+    if (count == 0) {
+        printf("\nNo students found.\n");
+        return;
+    }
+
+    printf("\n--- Student List ---\n");
+    for (int i = 0; i < count; i++) {
+        printf("Roll: %d | Name: %s | Grade: %.2f\n",
+               students[i].roll,
+               students[i].name,
+               students[i].grade);
+    }
+}
+
+void updateStudent() {
+	char temp[50];
+    int roll, found = -1;
+    while(1){
+    	int valid=1;
+        printf("\nEnter student Roll Number to Update: ");
+        scanf("%s",temp);
+        for(int i=0;temp[i]!='\0';i++){
+		if(temp[i]<'0'||temp[i]>'9'){
+    		valid=0;
+    		break;
+		}
+	}
+	if(!valid){
+		printf("invalid number only whole number allowed Ex:1\n");
+		continue;
+	}
+	roll=atoi(temp);
+	break;
+}
+
+    for (int i = 0; i < count; i++) {
+        if (students[i].roll == roll) {
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1) {
+        printf("Student not found.\n");
+        return;
+    }
+while(1){
+   	int valid=1;
+    printf("Enter student new  Name: ");
+    scanf("%s", students[found].name);
+    for(int i=0;students[found].name[i]!='\0';i++){
+    	if(!((students[found].name[i]>='A'&&
+		students[found].name[i]<='Z')||
+		(students[found].name[i]>='a'&&students[found].name[i]<='z'))){
+		
+	    valid=0;
+	    break;
+	}
+}
+
+    if(!valid){
+	printf("Invalid name!\nOnly alphabets are allowded Ex:ramya");
+	continue;
+}
+    break;
+}
+printf("Enter new grade");
+char tempg[50];
+while(1){
+	int valid=1;
+	int got=0;
+	scanf("%s",tempg);
+	for(int i=0;tempg[i]!='\0';i++){
+		if(tempg[i]=='.'){
+			got++;
+			if(got>1){
+				valid=0;
+				break;
+			}
+		}
+		else if(tempg[i]<'0'||tempg[i]>'9'){
+			valid=0;
+			break;
+		}
+		}
+		if(!valid){
+			printf("invalid enter decimal number only Ex:56.67\n");
+			continue;
+		}
+		students[found].grade=atof(tempg);
+		break;
+	}
+    
+
+
+    saveToFile();
+    printf("Record Updated Successfully!\n");
+}
+
+void deleteStudent() {
+	char tempRoll[50];
+	
+    int roll, found = -1;
+    while(1){
+     int valid=1;
+    printf("\nEnter Roll Number to Delete: ");
+    scanf("%s",tempRoll);
+    for(int i=0;tempRoll[i]!='\0';i++){
+    	if(tempRoll[i]<'0'||tempRoll[i]>'9'){
+    		valid=0;
+    		break;
+		}
+	}
+    	if(!valid){
+    		printf("invalid only whole number Ex:1\n");
+    		continue;
+		}
+		roll=atoi(tempRoll);
+		break;
+	}
+
+    for (int i = 0; i < count; i++) {
+        if (students[i].roll == roll) {
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1) {
+        printf("Student not found.\n");
+        return;
+    }
+
+    for (int i = found; i < count - 1; i++) {
+        students[i] = students[i + 1];
+    }
+
+    count--;
+    saveToFile();
+    printf("Student Deleted Successfully!\n");
+}
+
+int main() {
+    int choice;
+
+    loadFromFile();
+
+    while (1) {
+        printf("\n===== Student Management System =====\n");
+        printf("1. Add Student\n");
+        printf("2. View Students\n");
+        printf("3. Update Student\n");
+        printf("4. Delete Student\n");
+        printf("5. Exit\n");
+        
+        printf("Enter choice:");
+        choice=readInt();
+        if(choice<1||choice>5){
+		
+           printf("invalid Enter integer number (1,2,3,4,5):");
+        
+        	continue;
+		
+	}
+        
+        
+        	
+        	
+		
+	
+        
+		
+
+      switch (choice) {
+            case 1: addStudent(); break;
+            case 2: viewStudents(); break;
+            case 3: updateStudent(); break;
+            case 4: deleteStudent(); break;
+            case 5: printf("Exiting...\n"); 
+			return 0;
+            default: printf("Invalid Choice!\n");
+ 
+}
+}
+return 0;
+}
